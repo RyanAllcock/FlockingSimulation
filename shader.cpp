@@ -1,43 +1,6 @@
-#ifndef SHADER
-#define SHADER
+#include "shader.hpp"
 
-#include "main.h"
-
-struct Shader{ // 2D VGF shader program, with position and direction inputs
-	
-	int datan;
-	GLuint vbo, vao, program;
-	glm::mat4 model;
-	glm::mat4 projection;
-	
-	void set(int n);
-	
-	void update(GLfloat *pos, GLfloat *dir){
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * datan / 2, pos);
-		glBufferSubData(GL_ARRAY_BUFFER, sizeof(GLfloat) * datan / 2, sizeof(GLfloat) * datan / 2, dir);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
-	void display(int n){
-		glUseProgram(program);
-		glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-		glBindVertexArray(vao);
-		glDrawArrays(GL_POINTS, 0, n);
-		glBindVertexArray(0);
-	}
-	~Shader(){
-		glDeleteVertexArrays(1, &vao);
-		glDeleteBuffers(1, &vbo);
-		glDeleteProgram(program);
-	}
-	void setSize(glm::vec2 size, float scale){
-		model = glm::scale(glm::mat4(1.f), glm::vec3(0.015f * scale / size.x, 0.015f * scale / size.y, 0));
-		projection = glm::ortho(0.f, (float)size.x, 0.f, (float)size.y);
-	}
-};
-
-void Shader::set(int n){ // WIP : place position & direction data separately (then hopefully allow glm::vec3 value_ptr values to be fed in)
+void Shader::set(int n){
 	datan = n;
 	
 	//objects
@@ -90,7 +53,7 @@ void Shader::set(int n){ // WIP : place position & direction data separately (th
 			"geom_colour = vec3(0.8, 0, 0);"
 			"EmitVertex();"
 			
-			// "gl_Position = gl_in[0].gl_Position + vec4(scale * vert_rotate[0] * vec3(-1, -1, 0), 0);" //left wing
+			// "gl_Position = gl_in[0].gl_Position + vec4(scale * vert_rotate[0] * vec3(-1, -1, 0), 0);" //left wing WIP
 			// "geom_colour = vec3(0, 0.5, 0);"
 			// "EmitVertex();"
 			
@@ -151,4 +114,29 @@ void Shader::set(int n){ // WIP : place position & direction data separately (th
 	glDeleteShader(fs);
 }
 
-#endif
+void Shader::update(GLfloat *pos, GLfloat *dir){
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * datan / 2, pos);
+	glBufferSubData(GL_ARRAY_BUFFER, sizeof(GLfloat) * datan / 2, sizeof(GLfloat) * datan / 2, dir);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void Shader::display(int n){
+	glUseProgram(program);
+	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+	glBindVertexArray(vao);
+	glDrawArrays(GL_POINTS, 0, n);
+	glBindVertexArray(0);
+}
+
+Shader::~Shader(){
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
+	glDeleteProgram(program);
+}
+
+void Shader::setSize(glm::vec2 size, float scale){
+	model = glm::scale(glm::mat4(1.f), glm::vec3(0.015f * scale / size.x, 0.015f * scale / size.y, 0));
+	projection = glm::ortho(0.f, (float)size.x, 0.f, (float)size.y);
+}

@@ -1,6 +1,24 @@
-#include "main.h"
-#include "boids.h"
-#include "shader.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+#define GLEW_STATIC
+#include "GL/glew.h"
+
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_opengl.h"
+
+#include "shader.hpp"
+#include "source/boids.hpp"
+
+#define PI 3.1415
+
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
+#define FRAMERATE 60.f
+#define FRAMEPERIOD (1000.f / FRAMERATE)
+
+#define INPUT_QUIT -1
+#define INPUT_RESIZE 1
 
 int getInput(glm::ivec2 *windowSize){
 	SDL_Event event;
