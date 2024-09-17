@@ -1,0 +1,4 @@
+[submodule "FlockingSimulation"]
+	path = source
+	url = https://github.com/RyanAllcock/FlockingSimulation
+	branch = source
