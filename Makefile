@@ -3,11 +3,14 @@ CXX := g++
 BIN := temp/
 LIB := lib/
 SRC := source/
-OBJ := $(BIN)shader.o $(BIN)boids.o
+OBJ := $(BIN)window.o $(BIN)shader.o $(BIN)boids.o
 LINK := -lopenGL32 -lmingw32 -lSDL2main -lSDL2 -lglew32
 
 main: main.cpp $(OBJ)
 	$(CXX) -o boids.exe $(OBJ) main.cpp $(LINK)
+
+$(BIN)window.o: $(LIB)window/window.cpp $(LIB)window/window.hpp
+	$(CXX) -c -o $(BIN)window.o $(LIB)window/window.cpp
 
 $(BIN)shader.o: $(LIB)shader.cpp $(LIB)shader.hpp
 	$(CXX) -c -o $(BIN)shader.o $(LIB)shader.cpp
