@@ -7,7 +7,7 @@
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_opengl.h"
 
-#include "shader.hpp"
+#include "lib/shader.hpp"
 #include "source/boids.hpp"
 
 #define PI 3.1415
